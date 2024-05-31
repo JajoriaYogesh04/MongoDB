@@ -1,4 +1,5 @@
 const mongoose= require("mongoose");
+const { findByIdAndDelete } = require("../../../../Project/models/listing");
 const { Schema }= mongoose;
 
 async function main(){
@@ -22,6 +23,19 @@ const customerSchema= new Schema({
         },
     ],
 });
+
+// customerSchema.pre("findOneAndDelete", async ()=>{
+//     console.log("PRE MIDDLEWARE");
+// })
+
+
+customerSchema.post("findOneAndDelete", async(customer)=>{
+    // console.log(customer.order);
+    if(customer.order.length){
+        let result= await Order.deleteMany({ _id: {$in: customer.order} });
+        console.log(result);
+    }
+})
 
 const Order= mongoose.model("Order", orderSchema);
 
@@ -61,12 +75,12 @@ const findCustomer= async()=>{
 
 const addData= async()=>{
     let cust1= new Customer({
-        name: "Faouzia",
+        name: "Paradigm",
     })
 
     let order1= new Order({
-        item: "Pizza",
-        price: 399,
+        item: "Sweets",
+        price: 450,
     });
 
     cust1.order.push(order1);
@@ -78,7 +92,7 @@ const addData= async()=>{
 // addData();
 
 const delData= async()=>{
-    let delCust= await Customer.findByIdAndDelete("66595688cc03050f008f726c");
+    let delCust= await Customer.findByIdAndDelete("66595b094d3419be2482231b");
     console.log(delCust);
 }
 delData();
