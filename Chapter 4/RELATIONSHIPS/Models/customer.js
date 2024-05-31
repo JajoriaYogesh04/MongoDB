@@ -14,7 +14,7 @@ const orderSchema= new Schema({
 });
 
 const customerSchema= new Schema({
-    name: "string",
+    name: String,
     order: [
         {
             type: Schema.Types.ObjectId,
@@ -51,4 +51,10 @@ const addCustomer= async()=>{
     // const result= await Customer.find({})
     // console.log(result);
 }
-addCustomer();
+// addCustomer();
+
+const findCustomer= async()=>{
+    const result= await Customer.find({}).populate("order");
+    console.log(result[0]);
+}
+findCustomer();
